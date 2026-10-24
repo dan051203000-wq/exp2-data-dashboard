@@ -103,7 +103,7 @@ table(["类别", "配置"],
       [["硬件", "个人计算机（Windows 11）、网络环境"],
        ["编辑器", "VS Code"],
        ["开发语言", "Python 3.11"],
-       ["核心依赖", "Streamlit 1.66 / Pandas 2.3 / Plotly 7.1"],
+       ["核心依赖", "Streamlit 1.66 / Pandas 3.1 / Plotly 7.1"],
        ["辅助工具", "Chrome DevTools Protocol（自动化截图）、Matplotlib（版面草图）、python-docx（报告生成）"]],
       widths=[3, 13])
 

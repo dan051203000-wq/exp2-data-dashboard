@@ -72,6 +72,44 @@ streamlit run app.py
 | `?college=计算机学院` | 直接进入该学院下钻态 | `http://localhost:8501/?college=计算机学院` |
 | `?thr_daily=300&thr_big=0.5` | 压低预警阈值，触发预警条 | `http://localhost:8501/?thr_daily=300&thr_big=0.5` |
 
+## 🔁 完整复现说明
+
+### A. 只复现看板（推荐，最省事）
+
+仓库里已经带了生成好的原始数据与清洗后数据，不需要重跑数据管道：
+
+```bash
+git clone https://github.com/dan051203000-wq/exp2-data-dashboard.git
+cd exp2-data-dashboard
+pip install -r requirements.txt
+streamlit run app.py
+```
+
+打开 `http://localhost:8501` 即可看到完整看板。
+
+### B. 从零复现全部产出（数据 → 清洗 → 看板 → 截图 → 报告）
+
+| 步骤 | 命令 | 产出 |
+|---|---|---|
+| 1. 安装依赖 | `pip install -r requirements.txt` | — |
+| 2. 生成模拟原始数据 | `python generate_data.py` | `data/raw_campus_card_data.csv`（6040 条，含脏数据） |
+| 3. 数据预处理 | `python preprocess.py` | `data/clean_campus_card_data.csv`（5905 条） |
+| 4. 启动看板 | `streamlit run app.py` | 本机 `http://localhost:8501` |
+| 5. 自动抓图 | **另开一个终端**，保持看板运行，执行 `python tools/capture_screenshots.py` | `screenshots/*.png`（8 张） |
+| 6. 生成版面草图 | `python tools/make_sketch.py` | `docs/layout_sketch.png` |
+| 7. 生成实验报告 | `python tools/make_report.py` | `docs/实验2 数据看板的设计与实现-实验报告.docx` |
+
+> 第 5 步依赖本机 Chrome：`tools/capture_screenshots.py` 通过 **Chrome DevTools Protocol（CDP）** 直连浏览器截图，
+> **不需要 chromedriver**。脚本会自动完成「真实点击柱体下钻」「触发预警条」等交互后再截图，
+> 若某步自动化点击失败会自动回退到 URL 参数演示模式。
+
+### C. 环境注意事项
+
+- 本机实测环境：**Python 3.11.4 / Streamlit 1.66.1 / Pandas 3.1.0 / Plotly 7.1.0**
+- Plotly 7 已移除 `titlefont` 属性，自定义坐标轴标题必须写 `title=dict(text=..., font=dict(...))`，否则会报错
+- 数据表用 UTF-8-SIG 编码，避免 Excel 打开 CSV 中文乱码
+- 若 `pip install` 慢，可换清华源：`-i https://pypi.tuna.tsinghua.edu.cn/simple` |
+
 ## 📊 业务场景与数据
 
 **场景**：某高校 2025 秋季学期（2025-09-01 ~ 2025-12-31）校园一卡通消费流水。
